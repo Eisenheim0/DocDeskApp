@@ -48,9 +48,9 @@ public class SecurityConfiguration {
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
-                        .loginPage("/login") // You can customize login page URL here
+                        .loginPage("/login").permitAll() // You can customize login page URL here
                         .defaultSuccessUrl("/index", true)
-                        //.failureUrl("/error")
+                        .failureUrl("/login?error=true")
                 )
                 .logout(logout -> logout
                         .logoutUrl("/logout")

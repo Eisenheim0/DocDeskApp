@@ -1,7 +1,7 @@
 BEGIN
 
--- SCHEMA: pdf_web_tools
--- DROP SCHEMA IF EXISTS pdf_web_tools ;
+-- SCHEMA: DocDesk
+-- DROP SCHEMA IF EXISTS DocDesk ;
 
 CREATE SCHEMA IF NOT EXISTS DocDesk
     AUTHORIZATION postgres;
