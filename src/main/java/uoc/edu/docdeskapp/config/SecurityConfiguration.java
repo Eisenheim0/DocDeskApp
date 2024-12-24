@@ -49,7 +49,7 @@ public class SecurityConfiguration {
                 )
                 .formLogin(form -> form
                         .loginPage("/login").permitAll() // You can customize login page URL here
-                        .defaultSuccessUrl("/index", true)
+                        .defaultSuccessUrl("/users", true)
                         .failureUrl("/login?error=true")
                 )
                 .logout(logout -> logout
