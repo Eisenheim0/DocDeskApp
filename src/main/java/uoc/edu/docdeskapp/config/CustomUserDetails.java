@@ -9,6 +9,7 @@ import uoc.edu.docdeskapp.entity.UsuarioEntity;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class CustomUserDetails implements UserDetails {
 
@@ -18,11 +19,18 @@ public class CustomUserDetails implements UserDetails {
         this.usuarioEntity = usuarioEntity;
     }
 
+    public String getFullname() {
+        return usuarioEntity.getNombre() + " " + usuarioEntity.getApellido();
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         RolEntity rol = usuarioEntity.getRol();
         List<SimpleGrantedAuthority> authorities = new ArrayList<>();
+
         authorities.add(new SimpleGrantedAuthority(rol.getNombreRol()));
+        usuarioEntity.getRol().getPermisos().forEach(permiso -> authorities.add(new SimpleGrantedAuthority(permiso.getNombrePermiso())));
+
         return authorities;
     }
 

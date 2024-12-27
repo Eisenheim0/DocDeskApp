@@ -3,6 +3,7 @@ package uoc.edu.docdeskapp.entity;
 import jakarta.persistence.*;
 
 import java.sql.Timestamp;
+import java.time.Instant;
 
 @Entity
 @Table(name = "usuario", schema = "public", catalog = "DocDesk")
@@ -43,6 +44,7 @@ public class UsuarioEntity {
         this.correoElectronico = correoElectronico;
         this.contrasenya = contrasenya;
         this.rol = rol;
+        this.fechaRegistro = Timestamp.from(Instant.now());
     }
 
     public Long getIdUsuario() {

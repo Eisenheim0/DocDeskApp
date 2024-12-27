@@ -21,6 +21,9 @@ public class SecurityConfiguration {
     @Autowired
     private CustomUserDetailsService customUserDetailsService;
 
+    @Autowired
+    private CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler;
+
     @Bean
     public static PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -45,11 +48,12 @@ public class SecurityConfiguration {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/login", "/error", "/dist/**", "/plugins/**").permitAll()
+                        .requestMatchers("/users", "/users/**").hasAuthority("Administrador")
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
                         .loginPage("/login").permitAll() // You can customize login page URL here
-                        .defaultSuccessUrl("/users", true)
+                        .successHandler(customAuthenticationSuccessHandler)
                         .failureUrl("/login?error=true")
                 )
                 .logout(logout -> logout

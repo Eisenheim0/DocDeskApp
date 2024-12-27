@@ -17,7 +17,7 @@ public class RolEntity {
     @OneToMany(mappedBy = "rol", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<UsuarioEntity> usuarios;
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(
             name = "Rol_Permiso",
             joinColumns = @JoinColumn(name = "id_rol"),

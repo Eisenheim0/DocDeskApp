@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout}">
+<head>
+    <title th:text="'DocDesk Patients'"></title>
+    <style>
+        #create-patient-section {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+<div layout:fragment="content">
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 th:if="${paciente == null}">Consult test1</h1>
+                    <h1 th:if="${paciente != null}">Consult test2 ${paciente.nombre}</h1>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</div>
+
+<div layout:fragment="page-scripts">
+    <script>
+    </script>
+</div>
+
+</body>
+</html>

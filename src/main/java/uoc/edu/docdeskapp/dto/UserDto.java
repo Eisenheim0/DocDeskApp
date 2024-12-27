@@ -1,17 +1,40 @@
 package uoc.edu.docdeskapp.dto;
 
+
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+
 public class UserDto {
 
-    private String username, nombre, apellido, email, password;
-    //private Integer rol;
+    @NotBlank(message = "Username cannot be blank")
+    @Size(max = 50, message = "Username must not exceed 50 characters")
+    private String username;
 
-    public UserDto(String username, String nombre, String apellido, String email, String password) {
+    @NotBlank(message = "First name cannot be blank")
+    @Size(max = 100, message = "First name must not exceed 100 characters")
+    private String nombre;
+
+    @NotBlank(message = "Last name cannot be blank")
+    @Size(max = 100, message = "Last name must not exceed 100 characters")
+    private String apellido;
+
+    @NotBlank(message = "Email cannot be blank")
+    @Email(message = "Email must be valid")
+    private String email;
+
+    @NotBlank(message = "Password cannot be blank")
+    private String password;
+
+    private int idRol;
+
+    public UserDto(String username, String nombre, String apellido, String email, String password, int idRol) {
         this.username = username;
         this.nombre = nombre;
         this.apellido = apellido;
         this.email = email;
         this.password = password;
-        //this.rol = rol;
+        this.idRol = idRol;
     }
 
     public String getUsername() {
@@ -54,6 +77,14 @@ public class UserDto {
         this.password = password;
     }
 
+    public int getIdRol() {
+        return idRol;
+    }
+
+    public void setIdRol(int idRol) {
+        this.idRol = idRol;
+    }
+
     @Override
     public String toString() {
         return "UserDto{" +
@@ -62,7 +93,7 @@ public class UserDto {
                 ", apellido='" + apellido + '\'' +
                 ", email='" + email + '\'' +
                 ", contrasenya='" + password + '\'' +
-                ", rol=" + //rol +
+                ", rol=" + idRol +
                 '}';
     }
 }

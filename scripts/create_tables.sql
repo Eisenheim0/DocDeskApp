@@ -121,13 +121,14 @@ INSERT INTO Rol (nombre_rol) VALUES
 
 -- Insertar permisos básicos en la tabla Permiso
 INSERT INTO Permiso (nombre_permiso) VALUES
-                                         ('Gestionar Usuarios'),
-                                         ('Registrar Pacientes'),
-                                         ('Actualizar Historias Clínicas'),
-                                         ('Ver Citas'),
-                                         ('Modificar Citas'),
-                                         ('Cancelar Citas'),
-                                         ('Generar Informes Médicos');
+                                         ('MANAGE_USERS'),
+                                         ('REGISTER_PATIENTS'),
+                                         ('UPDATE_MEDICAL_RECORDS'),
+                                         ('VIEW_APPOINTMENTS'),
+                                         ('MODIFY_APPOINTMENTS'),
+                                         ('CANCEL_APPOINTMENTS'),
+                                         ('GENERATE_MEDICAL_REPORTS');
+
 
 -- Asignar permisos al rol de Administrador
 INSERT INTO Rol_Permiso (id_rol, id_permiso) VALUES

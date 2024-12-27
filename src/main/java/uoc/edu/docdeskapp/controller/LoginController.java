@@ -13,15 +13,7 @@ public class LoginController {
     private static final Logger logger = LoggerFactory.getLogger(LoginController.class);
 
     @RequestMapping("/login")
-    public String login(Model model, UserDto userDto) {
-        //userDto.setRol(1);
-        model.addAttribute("user", userDto);
-        logger.debug("|||||||||| " + userDto);
+    public String login(Model model) {
         return "login";
     }
-
-//    @RequestMapping("/error")
-//    public String error() {
-//        return "login";
-//    }
 }
