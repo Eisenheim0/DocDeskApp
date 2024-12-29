@@ -14,8 +14,108 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 th:if="${paciente == null}">Consult test1</h1>
-                    <h1 th:if="${paciente != null}">Consult test2 ${paciente.nombre}</h1>
+                    <h1 th:if="${paciente == null}">Consult</h1>
+                    <h1 th:if="${paciente != null}">Consult <span th:text="${paciente.nombre + ' ' + paciente.apellido}"></span></h1>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="consult-section" class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <form th:action="@{/consult/aiconsult}" method="post">
+                                <div class="form-group">
+                                    <label for="consult-textarea">Consult</label>
+                                    <textarea class="form-control" rows="6" id="consult-textarea"></textarea>
+                                </div>
+                                <div id="div-button-ai" class="row" style="justify-content: center">
+                                    <div class="d-flex justify-content-center align-items-center" style="height: 100px;">
+                                        <a onclick="callPrincipal(); return false;" class="btn btn-app bg-gradient-blue">
+                                            <i class="fas fa-robot"></i> AI
+                                        </a>
+                                    </div>
+                                </div>
+                                <div id="consult-overlay" class="overlay" style="display: none">
+                                    <i class="fas fa-2x fa-sync fa-spin"></i>
+                                </div>
+                                <div id="consult-ai-content" style="display: none">
+
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <div class="card">
+                                                <div class="card-header">
+                                                    <h3 class="card-title">
+                                                        Subjetivo (paciente)
+                                                    </h3>
+                                                </div>
+                                                <div id="div-ai-subjetivo" class="card-body">
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="card">
+                                                <div class="card-header">
+                                                    <h3 class="card-title">
+                                                        Objetivo (médico)
+                                                    </h3>
+                                                </div>
+                                                <div id="div-ai-objetivo" class="card-body">
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <div class="card">
+                                                <div class="card-header">
+                                                    <h3 class="card-title">
+                                                        Análisis (diagnóstico presuntivo)
+                                                    </h3>
+                                                </div>
+                                                <div id="div-ai-analisis" class="card-body">
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="card">
+                                                <div class="card-header">
+                                                    <h3 class="card-title">
+                                                        Plan de tratamiento (pruebas y prescripción)
+                                                    </h3>
+                                                </div>
+                                                <div id="div-ai-tratamiento" class="card-body">
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row" style="justify-content: center">
+                                        <div class="d-flex justify-content-center align-items-center" style="height: 100px;">
+                                            <a href="#" class="btn btn-app bg-gradient-blue">
+                                                <i class="fas fa-pills"></i> Interacción Medicamentosa
+                                            </a>
+                                            <a href="#" class="btn btn-app bg-gradient-blue">
+                                                <i class="fas fa-user-md"></i> Consejos Paciente
+                                            </a>
+                                            <a href="#" class="btn btn-app bg-gradient-blue">
+                                                <i class="fas fa-file-medical"></i> EPICRISIS
+                                            </a>
+                                            <a href="#" class="btn btn-app bg-gradient-blue">
+                                                <i class="fas fa-clipboard-check"></i> Seg. Protocolos
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -25,6 +125,78 @@
 
 <div layout:fragment="page-scripts">
     <script>
+        function callGPYSync(endpoint, mensaje) {
+            const xhr = new XMLHttpRequest();
+
+            // Abrir conexión síncrona
+            xhr.open('POST', endpoint, false);
+
+            // Configurar las cabeceras
+            xhr.setRequestHeader('Content-Type', 'text/plain');
+
+            try {
+                // Enviar el mensaje al servidor
+                xhr.send(mensaje);
+
+                if (xhr.status >= 200 && xhr.status < 300) {
+                    // Parsear la respuesta como JSON y retornarla
+                    return JSON.parse(xhr.responseText);
+                } else {
+                    console.error('Error del backend:', xhr.statusText);
+                    return null;
+                }
+            } catch (error) {
+                console.error('Error al realizar la solicitud:', error);
+                return null;
+            }
+        }
+
+        function callPrincipal() {
+            const textareaValue = document.getElementById('consult-textarea').value;
+
+            if (textareaValue && textareaValue.trim() !== "") {
+                hideButtonAI();
+                showOverlay();
+
+                setTimeout(() => {
+                    const hiddenContent = document.getElementById('consult-ai-content');
+                    const overlay = document.getElementById('consult-overlay');
+
+                    const respuesta = callGPYSync('/docdesk/consult/ai/principal', textareaValue);
+
+                    if (respuesta) {
+                        console.log('Respuesta recibida:', respuesta);
+                        // Poblar los divs con las respuestas
+                        document.getElementById('div-ai-subjetivo').innerText = respuesta[0];
+                        document.getElementById('div-ai-objetivo').innerText = respuesta[1];
+                        document.getElementById('div-ai-analisis').innerText = respuesta[2];
+                        document.getElementById('div-ai-tratamiento').innerText = respuesta[3];
+                    } else {
+                        alert('Error al comunicarse con el backend.');
+                    }
+
+                    // Ocultar el overlay
+                    overlay.style.display = 'none';
+                    // Mostrar el contenido oculto
+                    hiddenContent.style.display = 'block';
+                }, 0);
+            } else {
+                alert('El campo consulta está vacio.');
+            }
+        }
+
+        function showOverlay() {
+            const overlay = document.getElementById('consult-overlay');
+
+            overlay.style.display = 'flex';
+        }
+
+        function hideButtonAI() {
+            const overlay = document.getElementById('div-button-ai');
+
+            overlay.style.display = 'none';
+        }
+
     </script>
 </div>
 
