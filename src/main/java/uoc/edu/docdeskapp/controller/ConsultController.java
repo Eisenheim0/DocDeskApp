@@ -3,7 +3,6 @@ package uoc.edu.docdeskapp.controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
@@ -25,8 +24,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @Controller
 public class ConsultController {
@@ -60,12 +57,10 @@ public class ConsultController {
         }
 
         PacienteEntity pacienteEntity = null;
-
         if (idPaciente != null) {
             logger.debug("|||||||||| id: " + idPaciente);
             pacienteEntity = patientService.findById(idPaciente);
         }
-
         model.addAttribute("paciente", pacienteEntity);
 
         return "consult";

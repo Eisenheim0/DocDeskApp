@@ -6,4 +6,6 @@ import uoc.edu.docdeskapp.entity.PacienteEntity;
 public interface HistoriaclinicaService {
 
     HistoriaclinicaDTO findByPaciente(PacienteEntity paciente);
+
+    void save(HistoriaclinicaDTO historiaclinicaDTO);
 }

@@ -49,6 +49,9 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/login", "/error", "/dist/**", "/plugins/**").permitAll()
                         .requestMatchers("/users", "/users/**").hasAuthority("Administrador")
+                        .requestMatchers("/patients", "/patients/**").hasAnyAuthority("Recepcionista", "Enfermería", "Médico", "Administrador")
+                        .requestMatchers("/consult", "/consult/**").hasAnyAuthority("Médico", "Administrador")
+                        .requestMatchers("/clinicalhistory", "/clinicalhistory/**").hasAnyAuthority("Enfermería", "Médico", "Administrador")
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form

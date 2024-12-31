@@ -28,6 +28,6 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
             }
         }
 
-        response.sendRedirect("/docdesk/dates");
+        response.sendRedirect("/docdesk/patients");
     }
 }

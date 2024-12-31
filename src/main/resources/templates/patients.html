@@ -47,6 +47,7 @@
                                     <th>Phone</th>
                                     <th></th>
                                     <th></th>
+                                    <th></th>
                                 </tr>
                                 </thead>
 
@@ -58,6 +59,14 @@
                                     <td th:text="${#dates.format(patient.fechaNacimiento, 'dd/MM/yyyy')}"></td>
                                     <td th:text="${patient.direccion}"></td>
                                     <td th:text="${patient.telefono}"></td>
+
+                                    <td>
+                                        <a th:href="@{'/clinicalhistory?idPaciente=' + ${patient.idPaciente}}">
+                                            <button type="button" class="btn btn-primary btn-block" title="Clinical History">
+                                                <i class="fas fa-file-medical"></i>
+                                            </button>
+                                        </a>
+                                    </td>
 
                                     <td>
                                         <a th:href="@{'/consult?idPaciente=' + ${patient.idPaciente}}">

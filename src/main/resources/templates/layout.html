@@ -70,7 +70,7 @@
                         </a>
                     </li>
 
-                    <li sec:authorize="hasAnyAuthority('Médico', 'Administrador')" class="nav-item">
+                    <li sec:authorize="hasAnyAuthority('Recepcionista', 'Enfermería', 'Médico', 'Administrador')" class="nav-item">
                         <a th:href="@{/patients}" class="nav-link">
                             <i class="nav-icon fas fa-hospital-user"></i>
                             <p>Patients</p>
