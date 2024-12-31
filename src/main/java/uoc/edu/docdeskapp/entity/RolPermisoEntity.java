@@ -3,7 +3,7 @@ package uoc.edu.docdeskapp.entity;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "rol_permiso", schema = "public", catalog = "DocDesk")
+@Table(name = "rol_permiso", schema = "docdesk", catalog = "docdesk")
 @IdClass(RolPermisoEntityPK.class)
 public class RolPermisoEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)

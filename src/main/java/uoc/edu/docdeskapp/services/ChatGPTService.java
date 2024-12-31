@@ -30,7 +30,12 @@ public class ChatGPTService {
 
         // Prepare the request
         ChatGPTRequest.Message message = new ChatGPTRequest.Message("user", userMessage);
-        ChatGPTRequest request = new ChatGPTRequest("gpt-4o", List.of(message));
+        ChatGPTRequest request = new ChatGPTRequest(
+                chatGPTConfiguration.getModel(),
+                List.of(message),
+                chatGPTConfiguration.getMaxTokens(),
+                chatGPTConfiguration.getTemperature()
+        );
 
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "Bearer " + chatGPTConfiguration.getKey());

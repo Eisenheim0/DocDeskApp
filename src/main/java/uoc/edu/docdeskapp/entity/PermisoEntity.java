@@ -3,7 +3,7 @@ package uoc.edu.docdeskapp.entity;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "permiso", schema = "public", catalog = "DocDesk")
+@Table(name = "permiso", schema = "docdesk", catalog = "docdesk")
 public class PermisoEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id

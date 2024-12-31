@@ -22,7 +22,7 @@
 
     <div class="container-fluid" style="padding-bottom: 7.5px !important;">
         <div class="col-1">
-            <button id="createPatientButton" type="button" class="btn btn-block bg-gradient-success">
+            <button id="createPatientButton" type="button" class="btn btn-block bg-gradient-success" title="New patient">
                 <i class="fa-solid fa-person-circle-plus"></i>
             </button>
         </div>
@@ -61,7 +61,7 @@
 
                                     <td>
                                         <a th:href="@{'/consult?idPaciente=' + ${patient.idPaciente}}">
-                                            <button type="button" class="btn btn-primary btn-block">
+                                            <button type="button" class="btn btn-primary btn-block" title="New consult">
                                                 <i class="fas fa-hand-holding-medical"></i>
                                             </button>
                                         </a>
@@ -69,7 +69,7 @@
 
                                     <td>
                                         <a th:href="@{'/patients/delete/' + ${patient.idPaciente}}">
-                                            <button type="button" class="btn btn-danger btn-block">
+                                            <button type="button" class="btn btn-danger btn-block" title="Delete patient">
                                                 <i class="fa-solid fa-delete-left"></i>
                                             </button>
                                         </a>

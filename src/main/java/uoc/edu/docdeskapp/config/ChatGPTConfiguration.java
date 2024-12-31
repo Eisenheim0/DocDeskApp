@@ -9,6 +9,12 @@ public class ChatGPTConfiguration {
     private String url;
     private String key;
 
+    private String model;
+
+    private int maxTokens;
+
+    private double temperature;
+
     // Getters and setters
     public String getUrl() {
         return url;
@@ -24,5 +30,29 @@ public class ChatGPTConfiguration {
 
     public void setKey(String key) {
         this.key = key;
+    }
+
+    public String getModel() {
+        return model;
+    }
+
+    public void setModel(String model) {
+        this.model = model;
+    }
+
+    public int getMaxTokens() {
+        return maxTokens;
+    }
+
+    public void setMaxTokens(int maxTokens) {
+        this.maxTokens = maxTokens;
+    }
+
+    public double getTemperature() {
+        return temperature;
+    }
+
+    public void setTemperature(double temperature) {
+        this.temperature = temperature;
     }
 }

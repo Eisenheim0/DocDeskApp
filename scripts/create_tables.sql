@@ -1,15 +1,14 @@
-BEGIN
+BEGIN;
 
 -- SCHEMA: DocDesk
 -- DROP SCHEMA IF EXISTS DocDesk ;
 
-CREATE SCHEMA IF NOT EXISTS DocDesk
-    AUTHORIZATION postgres;
+CREATE SCHEMA IF NOT EXISTS docdesk;
 
-set schema 'DocDesk';
+SET search_path TO docdesk;
 
 -- Eliminar tablas existentes en orden para evitar conflictos de claves foráneas
-DROP TABLE IF EXISTS Informe CASCADE;
+DROP TABLE IF EXISTS Consulta CASCADE;
 DROP TABLE IF EXISTS HistorialAcceso CASCADE;
 DROP TABLE IF EXISTS Cita CASCADE;
 DROP TABLE IF EXISTS HistoriaClinica CASCADE;
@@ -70,10 +69,12 @@ CREATE TABLE Paciente (
 CREATE TABLE HistoriaClinica (
                                  id_historia SERIAL PRIMARY KEY,
                                  id_paciente INT NOT NULL,
-                                 fecha_creacion DATE NOT NULL,
-                                 diagnostico TEXT,
-                                 tratamiento TEXT,
-                                 observaciones TEXT,
+                                 fecha DATE NOT NULL,
+                                 antecedentes_familiares_heredados TEXT,
+                                 antecedentes_patologicos_personales TEXT,
+                                 antecedentes_personales_no_patológicos TEXT,
+                                 antecedentes_quirurgicos_traumaticos TEXT,
+                                 otros TEXT,
                                  CONSTRAINT fk_historia_paciente FOREIGN KEY (id_paciente) REFERENCES Paciente (id_paciente)
                                      ON DELETE CASCADE ON UPDATE CASCADE
 );
@@ -102,14 +103,22 @@ CREATE TABLE HistorialAcceso (
                                      ON DELETE CASCADE ON UPDATE CASCADE
 );
 
--- Crear tabla Informe
-CREATE TABLE Informe (
-                         id_informe SERIAL PRIMARY KEY,
-                         id_historia INT NOT NULL,
-                         fecha_creacion TIMESTAMP NOT NULL,
-                         contenido TEXT,
-                         CONSTRAINT fk_informe_historia FOREIGN KEY (id_historia) REFERENCES HistoriaClinica (id_historia)
-                             ON DELETE CASCADE ON UPDATE CASCADE
+-- Crear tabla Consulta
+CREATE TABLE Consulta (
+                          id_consulta SERIAL PRIMARY KEY,
+                          id_paciente INT NOT NULL,
+                          fecha_creacion TIMESTAMP NOT NULL,
+                          consulta TEXT,
+                          subjetivo TEXT,
+                          objetivo TEXT,
+                          analisis TEXT,
+                          tratamiento TEXT,
+                          interaccion_medicamentos TEXT,
+                          consejos_paciente TEXT,
+                          epicrisis TEXT,
+                          seguimiento_protocolos TEXT,
+                          CONSTRAINT fk_consulta_paciente FOREIGN KEY (id_paciente) REFERENCES Paciente (id_paciente)
+                              ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 -- Insertar roles básicos en la tabla Rol
@@ -157,19 +166,47 @@ INSERT INTO Rol_Permiso (id_rol, id_permiso) VALUES
                                                  (4, 5), -- Recepcionista: Modificar Citas
                                                  (4, 6); -- Recepcionista: Cancelar Citas
 
--- Insertar Usuario básico en la tabla Usuario
-INSERT INTO Usuario (
-    username,
-    nombre,
-    apellido,
-    correo_electronico,
-    contrasenya,
-    id_rol
-) VALUES (
-             'admin',            -- Username
-             'John',            -- Nombre
-             'Doe',             -- Apellido
-             'admin@example.com', -- Correo Electrónico
-             '$2a$12$ngePC.tQzywYgdS3IW/4iOSWLMpipMG3Z/HAxw6lxL9hGXL7/vu0i', -- Contraseña (encriptada)
-             1                  -- ID del Rol
-         );
+-- Poblar DB
+-- Insertar usuarios
+INSERT INTO Usuario (username, nombre, apellido, correo_electronico, contrasenya, id_rol) VALUES
+                                                                                              ('admin', 'Administrador', 'Principal', 'admin@docdesk.com', '$2a$12$ngePC.tQzywYgdS3IW/4iOSWLMpipMG3Z/HAxw6lxL9hGXL7/vu0i', 1),
+                                                                                              ('medico1', 'Carlos', 'Pérez', 'carlos.perez@docdesk.com', '$2a$12$ngePC.tQzywYgdS3IW/4iOSWLMpipMG3Z/HAxw6lxL9hGXL7/vu0i', 2),
+                                                                                              ('medico2', 'María', 'González', 'maria.gonzalez@docdesk.com', '$2a$12$ngePC.tQzywYgdS3IW/4iOSWLMpipMG3Z/HAxw6lxL9hGXL7/vu0i', 2),
+                                                                                              ('enfermeria1', 'Laura', 'Martínez', 'laura.martinez@docdesk.com', '$2a$12$ngePC.tQzywYgdS3IW/4iOSWLMpipMG3Z/HAxw6lxL9hGXL7/vu0i', 3),
+                                                                                              ('recepcionista1', 'Javier', 'López', 'javier.lopez@docdesk.com', '$2a$12$ngePC.tQzywYgdS3IW/4iOSWLMpipMG3Z/HAxw6lxL9hGXL7/vu0i', 4);
+
+-- Insertar pacientes
+INSERT INTO Paciente (nombre, apellido, fecha_nacimiento, direccion, telefono) VALUES
+                                                                                   ('Juan', 'García', '1980-05-10', 'Calle Mayor 15, Madrid', '600123456'),
+                                                                                   ('Ana', 'López', '1975-09-20', 'Avenida de la Paz 22, Barcelona', '610987654'),
+                                                                                   ('Luis', 'Martínez', '1990-03-15', 'Calle San Juan 7, Valencia', '620345678'),
+                                                                                   ('Sofía', 'Gómez', '1985-12-30', 'Plaza de España 3, Sevilla', '630876543'),
+                                                                                   ('Miguel', 'Rodríguez', '2000-01-01', 'Calle del Sol 8, Bilbao', '640234567'),
+                                                                                   ('Isabel', 'Hernández', '1995-07-25', 'Calle Luna 9, Zaragoza', '650456789'),
+                                                                                   ('Raúl', 'Fernández', '1970-11-15', 'Avenida del Mar 12, Málaga', '660678901'),
+                                                                                   ('Elena', 'Sánchez', '1965-04-10', 'Calle del Carmen 14, Alicante', '670789012'),
+                                                                                   ('Pablo', 'Jiménez', '1992-06-05', 'Plaza Mayor 1, Granada', '680890123'),
+                                                                                   ('Carmen', 'Ruiz', '1988-03-22', 'Calle Real 20, Murcia', '690901234'),
+                                                                                   ('Alberto', 'Díaz', '2005-08-19', 'Calle Castilla 6, Santander', '600112233'),
+                                                                                   ('Lucía', 'Moreno', '1978-10-28', 'Avenida Andalucía 18, Valladolid', '610223344'),
+                                                                                   ('Jorge', 'Álvarez', '1999-05-16', 'Calle Sevilla 11, Salamanca', '620334455'),
+                                                                                   ('Clara', 'Castro', '1983-02-11', 'Calle Granada 19, Burgos', '630445566'),
+                                                                                   ('Diego', 'Vargas', '1997-12-07', 'Calle León 21, Córdoba', '640556677');
+
+-- Insertar historias clínicas
+INSERT INTO HistoriaClinica (
+    id_paciente,
+    fecha,
+    antecedentes_familiares_heredados,
+    antecedentes_patologicos_personales,
+    antecedentes_personales_no_patológicos,
+    antecedentes_quirurgicos_traumaticos,
+    otros
+) VALUES
+      (1, '2024-01-10', 'Diabetes tipo 2', 'Hipertensión arterial', 'No fuma, consume alcohol ocasionalmente', 'Cirugía de apendicitis en 2015', 'Control regular cada 6 meses'),
+      (2, '2024-01-15', 'Cáncer de mama en la familia', 'Asma bronquial', 'No fuma, vegetariana', 'Sin antecedentes quirúrgicos', 'Alérgica a la penicilina'),
+      (3, '2024-01-20', 'Hipertensión en padres', 'Ninguna condición personal destacable', 'Vida activa, consume alcohol regularmente', 'Fractura de tobillo en 2020', 'Vacunación al día'),
+      (4, '2024-01-25', 'Obesidad en hermanos', 'Colesterol alto', 'Fuma ocasionalmente', 'Cirugía dental en 2010', 'Pendiente de análisis recientes'),
+      (5, '2024-02-01', 'Enfermedad cardiovascular en padres', 'Ninguna', 'Vida activa, no fuma ni bebe', 'Fractura de brazo en 2018', 'Seguimiento anual recomendado');
+
+COMMIT;

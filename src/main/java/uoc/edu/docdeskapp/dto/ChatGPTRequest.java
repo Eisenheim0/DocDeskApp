@@ -1,14 +1,22 @@
 package uoc.edu.docdeskapp.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.List;
 
 public class ChatGPTRequest {
     private String model;
     private List<Message> messages;
 
-    public ChatGPTRequest(String model, List<Message> messages) {
+    @JsonProperty("max_tokens")
+    private int maxTokens;
+    private double temperature;
+
+    public ChatGPTRequest(String model, List<Message> messages, int maxTokens, double temperature) {
         this.model = model;
         this.messages = messages;
+        this.maxTokens = maxTokens;
+        this.temperature = temperature;
     }
 
     public static class Message {
@@ -51,5 +59,21 @@ public class ChatGPTRequest {
 
     public void setMessages(List<Message> messages) {
         this.messages = messages;
+    }
+
+    public int getMaxTokens() {
+        return maxTokens;
+    }
+
+    public void setMaxTokens(int maxTokens) {
+        this.maxTokens = maxTokens;
+    }
+
+    public double getTemperature() {
+        return temperature;
+    }
+
+    public void setTemperature(double temperature) {
+        this.temperature = temperature;
     }
 }
