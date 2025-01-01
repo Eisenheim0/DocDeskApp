@@ -117,7 +117,8 @@ CREATE TABLE Consulta (
                           consejos_paciente TEXT,
                           epicrisis TEXT,
                           seguimiento_protocolos TEXT,
-                          CONSTRAINT fk_consulta_paciente FOREIGN KEY (id_paciente) REFERENCES Paciente (id_paciente)
+                          informe BYTEA,
+                              CONSTRAINT fk_consulta_paciente FOREIGN KEY (id_paciente) REFERENCES Paciente (id_paciente)
                               ON DELETE CASCADE ON UPDATE CASCADE
 );
 
