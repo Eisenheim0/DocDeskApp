@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout}">
+<head>
+    <title th:text="'DocDesk Consult'"></title>
+    <style>
+    </style>
+</head>
+<body>
+<div layout:fragment="content">
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 th:if="${paciente == null}">Consult</h1>
+                    <h1 th:if="${paciente != null}">Consult <span th:text="${paciente.nombre + ' ' + paciente.apellido}"></span></h1>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section th:if="${paciente == null}" class="content">
+        <div class="error-page">
+            <div class="error-content">
+                <h3><i class="fas fa-exclamation-triangle text-warning"></i> Oops! Create a new consult from Patients.</h3>
+            </div>
+        </div>
+    </section>
+
+    <section th:if="${paciente != null}" id="consult-section" class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <form th:action="@{/consult/aiconsult}" method="post">
+                                <input type="hidden" id="id-paciente" th:value="${paciente != null ? paciente.idPaciente : 0}">
+
+                                <div class="form-group">
+                                    <label for="consult-textarea">Consult</label>
+                                    <textarea class="form-control" rows="6" id="consult-textarea"></textarea>
+                                </div>
+                                <div id="div-button-ai" class="row" style="justify-content: center">
+                                    <div class="d-flex justify-content-center align-items-center" style="height: 100px;">
+                                        <a onclick="callPrincipal(); return false;" class="btn btn-app bg-gradient-blue" title="Consultar IA">
+                                            <i class="fas fa-robot"></i> AI
+                                        </a>
+                                    </div>
+                                </div>
+                                <div id="consult-overlay" class="overlay" style="display: none">
+                                    <i class="fas fa-2x fa-sync fa-spin"></i>
+                                </div>
+                                <div id="consult-ai-content" style="display: none">
+
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <div class="card card-outline card-primary">
+                                                <div class="card-header">
+                                                    <h3 class="card-title">
+                                                        Subjetivo (paciente)
+                                                    </h3>
+                                                </div>
+                                                <div id="div-ai-subjetivo" class="card-body">
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="card card-outline card-primary">
+                                                <div class="card-header">
+                                                    <h3 class="card-title">
+                                                        Objetivo (médico)
+                                                    </h3>
+                                                </div>
+                                                <div id="div-ai-objetivo" class="card-body">
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <div class="card card-outline card-primary">
+                                                <div class="card-header">
+                                                    <h3 class="card-title">
+                                                        Análisis (diagnóstico presuntivo)
+                                                    </h3>
+                                                </div>
+                                                <div id="div-ai-analisis" class="card-body">
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="card card-outline card-primary">
+                                                <div class="card-header">
+                                                    <h3 class="card-title">
+                                                        Plan de tratamiento (pruebas y prescripción)
+                                                    </h3>
+                                                </div>
+                                                <div id="div-ai-tratamiento" class="card-body">
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row" style="justify-content: center">
+                                        <div class="d-flex justify-content-center align-items-center" style="height: 100px;">
+                                            <a onclick="callMedicamentos(); return false;" class="btn btn-app bg-gradient-blue" title="Interacción Medicamentosa"
+                                               data-toggle="modal" data-target="#modal-overlay">
+                                                <i class="fas fa-pills"></i> Interacción Medicamentosa
+                                            </a>
+                                            <a onclick="callConsejos(); return false;" class="btn btn-app bg-gradient-blue" title="Consejos Paciente"
+                                               data-toggle="modal" data-target="#modal-overlay">
+                                                <i class="fas fa-user-md"></i> Consejos Paciente
+                                            </a>
+                                            <a onclick="callEpicrisis(); return false;" class="btn btn-app bg-gradient-blue" title="EPICRISIS"
+                                               data-toggle="modal" data-target="#modal-overlay">
+                                                <i class="fas fa-file-medical"></i> EPICRISIS
+                                            </a>
+                                            <a onclick="callProtocolos(); return false;" class="btn btn-app bg-gradient-blue" title="Seguimiento Protocolos"
+                                               data-toggle="modal" data-target="#modal-overlay">
+                                                <i class="fas fa-clipboard-check"></i> Seg. Protocolos
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- /.modal -->
+
+        <div class="modal fade" id="modal-overlay">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div id="overlay-buttons" class="overlay">
+                        <i class="fas fa-2x fa-sync fa-spin"></i>
+                    </div>
+                    <div class="modal-header">
+                        <h4 id="title-modal" class="modal-title">Default Modal</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div id="body-modal" class="modal-body">
+                        <p>One fine body&hellip;</p>
+                    </div>
+                    <div class="modal-footer justify-content-between">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+        <!-- /.modal -->
+    </section>
+
+</div>
+
+<div layout:fragment="page-scripts">
+    <script>
+        let intMedicamentos = null;
+        let conPaciente = null;
+        let epicrisis = null;
+        let segProtocolos = null;
+
+        async function callGPTAsync(endpoint, mensaje, idPaciente) {
+            try {
+                const requestBody = JSON.stringify({
+                    consult: mensaje,
+                    idPaciente: idPaciente,
+                });
+
+                const response = await fetch(endpoint, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: requestBody,
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Error del backend: ${response.statusText}`);
+                }
+
+                return await response.json();
+            } catch (error) {
+                console.error('Error al realizar la solicitud:', error);
+                return null;
+            }
+        }
+
+        async function callPrincipal() {
+            const textareaValue = document.getElementById('consult-textarea').value;
+            const idPaciente = document.getElementById('id-paciente').value;
+
+            if (textareaValue && textareaValue.trim() !== "") {
+                hideButtonAI();
+                showOverlay();
+
+                try {
+                    const hiddenContent = document.getElementById('consult-ai-content');
+                    const overlay = document.getElementById('consult-overlay');
+
+                    const respuesta = await callGPTAsync('/docdesk/consult/ai/principal', textareaValue, idPaciente);
+
+                    if (respuesta) {
+                        console.log('Respuesta recibida:', respuesta);
+                        // Poblar los divs con las respuestas
+                        document.getElementById('div-ai-subjetivo').innerText = respuesta[0];
+                        document.getElementById('div-ai-objetivo').innerText = respuesta[1];
+                        document.getElementById('div-ai-analisis').innerText = respuesta[2];
+                        document.getElementById('div-ai-tratamiento').innerText = respuesta[3];
+                    } else {
+                        alert('Error al comunicarse con el backend.');
+                    }
+
+                    overlay.style.display = 'none';
+                    hiddenContent.style.display = 'block';
+                } catch (error) {
+                    console.error('Error al procesar la solicitud:', error);
+                    alert('Error al procesar la solicitud.');
+                }
+            } else {
+                alert('El campo consulta está vacío.');
+            }
+        }
+
+        function showOverlay() {
+            const overlay = document.getElementById('consult-overlay');
+
+            overlay.style.display = 'flex';
+        }
+
+        function hideButtonAI() {
+            const overlay = document.getElementById('div-button-ai');
+
+            overlay.style.display = 'none';
+        }
+
+        async function callMedicamentos() {
+            const idPaciente = document.getElementById('id-paciente').value;
+            title = 'Interacción medicamentosa';
+            body = 'Processing';
+            showOverlayButtons();
+            updateModalContent(title, body);
+
+            if (intMedicamentos === null) {
+                try {
+                    const respuesta = await callGPTAsync('/docdesk/consult/ai/medicamentos', '', idPaciente);
+
+                    if (respuesta) {
+                        console.log('Respuesta recibida:', respuesta.body);
+                        body = respuesta.body;
+                        updateModalContent(title, body);
+                        intMedicamentos = body;
+                    } else {
+                        alert('Error al comunicarse con el backend.');
+                    }
+                } catch (error) {
+                    console.error('Error al procesar la solicitud:', error);
+                    alert('Error al procesar la solicitud.');
+                }
+            } else {
+                updateModalContent(title, intMedicamentos);
+            }
+            hideOverlayButtons();
+        }
+
+        function hideOverlayButtons() {
+            const overlay = document.getElementById('overlay-buttons');
+
+            overlay.style.display = 'none';
+        }
+
+        function showOverlayButtons() {
+            const overlay = document.getElementById('overlay-buttons');
+
+            overlay.style.display = 'flex';
+        }
+
+        function updateModalContent(title, body) {
+            document.getElementById('title-modal').innerText = title;
+            document.getElementById('body-modal').innerHTML = body;
+        }
+
+        async function callConsejos() {
+            const idPaciente = document.getElementById('id-paciente').value;
+            title = 'Consejos Paciente';
+            body = 'Processing';
+            showOverlayButtons();
+            updateModalContent(title, body);
+
+            if (conPaciente === null) {
+                try {
+                    const respuesta = await callGPTAsync('/docdesk/consult/ai/consejos', '', idPaciente);
+
+                    if (respuesta) {
+                        console.log('Respuesta recibida:', respuesta.body);
+                        body = respuesta.body;
+                        updateModalContent(title, body);
+                        conPaciente = body;
+                    } else {
+                        alert('Error al comunicarse con el backend.');
+                    }
+                } catch (error) {
+                    console.error('Error al procesar la solicitud:', error);
+                    alert('Error al procesar la solicitud.');
+                }
+            } else {
+                updateModalContent(title, conPaciente);
+            }
+            hideOverlayButtons();
+        }
+
+        async function callEpicrisis() {
+            const idPaciente = document.getElementById('id-paciente').value;
+            title = 'EPICRISIS';
+            body = 'Processing';
+            showOverlayButtons();
+            updateModalContent(title, body);
+
+            if (epicrisis === null) {
+                try {
+                    const respuesta = await callGPTAsync('/docdesk/consult/ai/epicrisis', '', idPaciente);
+
+                    if (respuesta) {
+                        console.log('Respuesta recibida:', respuesta.body);
+                        body = respuesta.body;
+                        updateModalContent(title, body);
+                        epicrisis = body;
+                    } else {
+                        alert('Error al comunicarse con el backend.');
+                    }
+                } catch (error) {
+                    console.error('Error al procesar la solicitud:', error);
+                    alert('Error al procesar la solicitud.');
+                }
+            } else {
+                updateModalContent(title, epicrisis);
+            }
+            hideOverlayButtons();
+        }
+
+        async function callProtocolos() {
+            const idPaciente = document.getElementById('id-paciente').value;
+            title = 'Seguimiento Protocolos';
+            body = 'Processing';
+            showOverlayButtons();
+            updateModalContent(title, body);
+
+            if (segProtocolos === null) {
+                try {
+                    const respuesta = await callGPTAsync('/docdesk/consult/ai/protocolos', '', idPaciente);
+
+                    if (respuesta) {
+                        console.log('Respuesta recibida:', respuesta.body);
+                        body = respuesta.body;
+                        updateModalContent(title, body);
+                        segProtocolos = body;
+                    } else {
+                        alert('Error al comunicarse con el backend.');
+                    }
+                } catch (error) {
+                    console.error('Error al procesar la solicitud:', error);
+                    alert('Error al procesar la solicitud.');
+                }
+            } else {
+                updateModalContent(title, segProtocolos);
+            }
+            hideOverlayButtons();
+        }
+    </script>
+</div>
+
+</body>
+</html>

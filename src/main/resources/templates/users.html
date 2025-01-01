@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout}">
+<head>
+    <title th:text="'DocDesk Users'"></title>
+    <style>
+        #create-user-section {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+<div layout:fragment="content">
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1>User Management</h1>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="container-fluid" style="padding-bottom: 7.5px !important;">
+        <div class="col-1">
+            <button id="createUserButton" type="button" class="btn btn-block bg-gradient-success" title="New user">
+                <i class="fa-solid fa-user-plus"></i>
+            </button>
+        </div>
+    </div>
+
+    <section id="users-section" class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+
+                        <div class="card-body">
+
+                            <table id="users" class="table table-bordered table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Username</th>
+                                        <th>Name</th>
+                                        <th>Last name</th>
+                                        <th>Email</th>
+                                        <th>Role</th>
+                                        <th>Date register</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    <tr th:each="user : ${users}">
+                                        <td th:text="${user.idUsuario}"></td>
+                                        <td th:text="${user.username}"></td>
+                                        <td th:text="${user.nombre}"></td>
+                                        <td th:text="${user.apellido}"></td>
+                                        <td th:text="${user.correoElectronico}"></td>
+                                        <td th:text="${user.rol.nombreRol}"></td>
+                                        <td th:text="${#dates.format(user.fechaRegistro, 'dd/MM/yyyy')}"></td>
+
+                                        <td>
+                                            <a th:href="@{'/users/delete/' + ${user.idUsuario}}"
+                                               onclick="return confirm('Are you sure you want to delete this user?');">
+                                                <button type="button" class="btn btn-danger btn-block" title="Delete user">
+                                                    <i class="fa-solid fa-delete-left"></i>
+                                                </button>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+
+                            </table>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="create-user-section" class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card card-primary">
+                        <form th:action="@{/users/create}" method="post">
+                            <div class="card-body">
+                                <div class="form-group">
+                                    <label for="username">Username</label>
+                                    <input type="text" class="form-control" id="username" name="username" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="nombre">First Name</label>
+                                    <input type="text" class="form-control" id="nombre" name="nombre" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="apellido">Last Name</label>
+                                    <input type="text" class="form-control" id="apellido" name="apellido" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="email">Email</label>
+                                    <input type="email" class="form-control" id="email" name="email" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="password">Password</label>
+                                    <input type="password" class="form-control" id="password" name="password" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="idRol">Role</label>
+                                    <select class="form-control" id="idRol" name="idRol" required>
+                                        <option th:each="rol : ${roles}" th:value="${rol.idRol}" th:text="${rol.nombreRol}"></option>
+                                    </select>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Create User</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<div layout:fragment="page-scripts">
+    <script>
+        $(function () {
+            $('#users').DataTable({
+                "paging": true,
+                "lengthChange": false,
+                "searching": false,
+                "ordering": true,
+                "info": true,
+                "autoWidth": false,
+                "responsive": true,
+            });
+        });
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const createUserButton = document.getElementById("createUserButton");
+            const usersSection = document.getElementById("users-section");
+            const createUserSection = document.getElementById("create-user-section");
+
+            createUserButton.addEventListener("click", function () {
+                usersSection.style.display = "none";
+                createUserSection.style.display = "block";
+                createUserButton.style.display = "none";
+            });
+        });
+    </script>
+</div>
+
+</body>
+</html>
