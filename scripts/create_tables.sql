@@ -182,17 +182,7 @@ INSERT INTO Paciente (nombre, apellido, fecha_nacimiento, direccion, telefono) V
                                                                                    ('Ana', 'López', '1975-09-20', 'Avenida de la Paz 22, Barcelona', '610987654'),
                                                                                    ('Luis', 'Martínez', '1990-03-15', 'Calle San Juan 7, Valencia', '620345678'),
                                                                                    ('Sofía', 'Gómez', '1985-12-30', 'Plaza de España 3, Sevilla', '630876543'),
-                                                                                   ('Miguel', 'Rodríguez', '2000-01-01', 'Calle del Sol 8, Bilbao', '640234567'),
-                                                                                   ('Isabel', 'Hernández', '1995-07-25', 'Calle Luna 9, Zaragoza', '650456789'),
-                                                                                   ('Raúl', 'Fernández', '1970-11-15', 'Avenida del Mar 12, Málaga', '660678901'),
-                                                                                   ('Elena', 'Sánchez', '1965-04-10', 'Calle del Carmen 14, Alicante', '670789012'),
-                                                                                   ('Pablo', 'Jiménez', '1992-06-05', 'Plaza Mayor 1, Granada', '680890123'),
-                                                                                   ('Carmen', 'Ruiz', '1988-03-22', 'Calle Real 20, Murcia', '690901234'),
-                                                                                   ('Alberto', 'Díaz', '2005-08-19', 'Calle Castilla 6, Santander', '600112233'),
-                                                                                   ('Lucía', 'Moreno', '1978-10-28', 'Avenida Andalucía 18, Valladolid', '610223344'),
-                                                                                   ('Jorge', 'Álvarez', '1999-05-16', 'Calle Sevilla 11, Salamanca', '620334455'),
-                                                                                   ('Clara', 'Castro', '1983-02-11', 'Calle Granada 19, Burgos', '630445566'),
-                                                                                   ('Diego', 'Vargas', '1997-12-07', 'Calle León 21, Córdoba', '640556677');
+                                                                                   ('Miguel', 'Rodríguez', '2000-01-01', 'Calle del Sol 8, Bilbao', '640234567');
 
 -- Insertar historias clínicas
 INSERT INTO HistoriaClinica (

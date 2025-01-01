@@ -10,6 +10,15 @@ public class AppConfiguration {
     @Value("${OPENAI_API_KEY:}")
     private String apiKey;
 
+    @Value("${DB_URL}")
+    private String dbUrl;
+
+    @Value("${DB_USER}")
+    private String dbUser;
+
+    @Value("${DB_PASSWORD}")
+    private String dbPassword;
+
     @Value("${uoc.edu.docdesk.prompt.principal}")
     private String promptPrincipal;
 
@@ -59,5 +68,32 @@ public class AppConfiguration {
         }
 
         System.out.println("OPENAI API Key is set: " + apiKey);
+    }
+
+    @PostConstruct
+    public void validateDbUrl() {
+        if (dbUrl == null || dbUrl.isEmpty()) {
+            throw new IllegalStateException("DB_URL is not set in the environment");
+        }
+
+        System.out.println("DB URL Key is set: " + dbUrl);
+    }
+
+    @PostConstruct
+    public void validateDbUser() {
+        if (dbUser == null || dbUser.isEmpty()) {
+            throw new IllegalStateException("DB_USER is not set in the environment");
+        }
+
+        System.out.println("DB USER Key is set: " + dbUser);
+    }
+
+    @PostConstruct
+    public void validateDbPassword() {
+        if (dbPassword == null || dbPassword.isEmpty()) {
+            throw new IllegalStateException("DB_PASSWORD is not set in the environment");
+        }
+
+        System.out.println("DB PASSWORD Key is set: " + dbPassword);
     }
 }
